@@ -1,0 +1,208 @@
+.floating-panel {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', -apple-system, sans-serif;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  position: relative;
+}
+
+.floating-panel.rounded {
+  border-radius: 20px;
+}
+
+.floating-panel.rounded .floating-panel-header {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.floating-panel.rounded .floating-panel-footer {
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.floating-panel.with-shadow {
+  box-shadow:
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 4px 6px -1px rgba(0, 0, 0, 0.08),
+    0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 20px 40px -10px rgba(0, 0, 0, 0.12);
+}
+
+.floating-panel.dragging {
+  box-shadow:
+    0 4px 8px -1px rgba(0, 0, 0, 0.08),
+    0 8px 16px -1px rgba(0, 0, 0, 0.1),
+    0 16px 24px -4px rgba(0, 0, 0, 0.1),
+    0 30px 60px -12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Header with background */
+.floating-panel-header {
+  position: relative;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #fafbfc 0%, #f6f8f9 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  min-height: 36px;
+}
+
+/* Footer with background */
+.floating-panel-footer {
+  position: relative;
+  padding: 8px 16px;
+  background: linear-gradient(0deg, #fafbfc 0%, #fdfdfd 100%);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  min-height: 36px;
+}
+
+/* iPhone X-style drag bar */
+.drag-bar {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  cursor: move;
+  z-index: 100;
+  transition: background 0.15s ease;
+}
+
+.drag-bar:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.floating-panel.dragging .drag-bar {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Panel Icons - positioned in corners */
+.panel-icon {
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  color: #666;
+  cursor: default;
+  user-select: none;
+}
+
+.panel-icon-top-left {
+  top: 0;
+  left: 0;
+}
+
+.panel-icon-top-center {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.panel-icon-top-right {
+  top: 0;
+  right: 0;
+}
+
+.panel-icon-bottom-left {
+  bottom: 0;
+  left: 0;
+}
+
+.panel-icon-bottom-right {
+  bottom: 0;
+  right: 0;
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: tooltip-fade-in 0.15s ease;
+}
+
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Top tooltip animation */
+.tooltip-top {
+  animation: tooltip-fade-in-top 0.15s ease;
+}
+
+@keyframes tooltip-fade-in-top {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-100%);
+  }
+}
+
+/* Main content area */
+.floating-panel-main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 12px 12px 8px;
+  background: #ffffff;
+  min-height: 0;
+}
+
+.floating-panel-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.floating-panel-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.floating-panel-main::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+}
+
+.floating-panel-main::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .floating-panel {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    top: auto !important;
+    bottom: 10px;
+    height: 80vh !important;
+  }
+
+  .drag-bar {
+    cursor: default;
+  }
+}
