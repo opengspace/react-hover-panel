@@ -9,7 +9,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.js'),
       name: 'ReactHoverPanel',
       formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'es' : 'js'}`,
+      fileName: (format) => `index.${format === 'es' ? 'es.js' : 'js'}`,
     },
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled
