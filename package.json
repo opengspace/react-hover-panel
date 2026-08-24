@@ -1,5 +1,5 @@
 {
-  "name": "@opengspace/react-hover-panel",
+  "name": "@openg.space/react-hover-panel",
   "version": "1.0.0",
   "description": "A beautiful, draggable floating panel component for React with smart opacity and smooth animations",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:lib": "vite build --config vite.config.lib.js",
+    "build:lib": "vite build --config vite.config.lib.js && node scripts/fix-cjs.js && node scripts/verify-build.cjs",
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib",
     "test:pack": "npm pack --dry-run",
