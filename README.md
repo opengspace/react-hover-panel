@@ -4,6 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/%40opengspace%2Freact-hover-panel.svg)](https://www.npmjs.com/package/@opengspace/react-hover-panel)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Demo](https://img.shields.io/badge/demo-live-success.svg)](https://opengspace.github.io/react-hover-panel/)
 
 ## ✨ Features
 
@@ -15,6 +16,7 @@
 - **⚡ Smooth Animations** - GPU-accelerated with 60fps performance using requestAnimationFrame
 - **🔒 Boundary Control** - Keeps panel within viewport with configurable edge margins
 - **🎪 Portal Tooltips** - Tooltips render outside the panel to prevent event interference
+- **🗜️ Minimize to Sidebar** - Shrink the panel to a draggable edge icon with customizable icon and tooltip
 - **⚙️ Highly Customizable** - Extensive props for customization
 
 ## 📦 Installation
@@ -115,6 +117,33 @@ Each icon region accepts either:
 | `className` | `string` | `''` | Additional CSS class names |
 | `style` | `CSSProperties` | `{}` | Additional inline styles |
 | `ref` | `RefObject` | - | Forwarded ref |
+
+### Minimize to Sidebar
+
+The panel can shrink to a small docked icon on the screen edge instead of closing:
+
+```jsx
+<FloatingPanel
+  minimizable
+  minimizeIcon={<span>🎗</span>}   // ReactNode, emoji, or image URL
+  minimizeTooltip="Expand panel"   // tooltip shown when hovering the docked icon
+  onMinimizeChange={(m) => console.log('minimized?', m)}
+>
+  ...
+</FloatingPanel>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `minimizable` | `boolean` | `false` | Show the minimize button in the header |
+| `minimizeIcon` | `ReactNode \| string` | `—` | Icon of the docked sidebar button; string renders as emoji/text, or `<img>` when it is an image URL |
+| `minimizeTooltip` | `string` | `'Expand panel'` | Tooltip text on the docked icon |
+| `defaultMinimized` | `boolean` | `false` | Start in the minimized state |
+| `onMinimizeChange` | `(minimized: boolean) => void` | — | Called when the minimized state changes |
+
+The docked icon follows the edge the panel is nearest to, can be dragged vertically along
+the edge, and clicking it restores the panel to its previous position (children state is
+preserved while minimized).
 
 ## 💡 Usage Examples
 
@@ -310,9 +339,14 @@ For issues and questions, please visit our [GitHub Issues](https://github.com/op
 
 ## 🔗 Links
 
+- **Live Demo**: https://opengspace.github.io/react-hover-panel/
 - [GitHub Repository](https://github.com/opengspace/react-hover-panel)
 - [NPM Package](https://www.npmjs.com/package/@opengspace/react-hover-panel)
 - [Issues](https://github.com/opengspace/react-hover-panel/issues)
+
+## 🚀 Automatic Deployment
+
+This project uses GitHub Actions to automatically deploy the demo to GitHub Pages on every push to the `main` branch. See [DEPLOYMENT.md](DEPLOYMENT.md) for details.
 
 ---
 

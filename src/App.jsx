@@ -412,6 +412,33 @@ function App() {
           </div>
         </FloatingPanel>
       )}
+
+      {/* Minimizable Floating Panel (demo) */}
+      {showPanel && (
+        <FloatingPanel
+          width={340}
+          topPadding={20}
+          bottomPadding={20}
+          defaultPosition={{ x: 60, y: 200 }}
+          minimizable
+          minimizeIcon={<span>🎗</span>}
+          minimizeTooltip="Expand panel"
+          onMinimizeChange={(m) => addLog(m ? 'Panel minimized' : 'Panel restored')}
+          onClose={() => setShowPanel(false)}
+          zIndex={1000}
+          topLeft={{ icon: <span>⌂</span>, tooltip: 'Home' }}
+        >
+          <div style={{ padding: '4px 8px' }}>
+            <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 600 }}>
+              Minimizable Panel
+            </p>
+            <p style={{ margin: 0, fontSize: '13px', color: '#4a5568', lineHeight: 1.5 }}>
+              Click the minimize button (—) in the header, or click the docked icon on the
+              left edge to restore. Drag the icon vertically along the edge to reposition.
+            </p>
+          </div>
+        </FloatingPanel>
+      )}
     </div>
   );
 }
