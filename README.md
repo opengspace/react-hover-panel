@@ -1,6 +1,6 @@
 # @opengspace/react-hover-panel
 
-> A beautiful, draggable floating panel component for React with smart opacity, smooth animations, and modern design.
+> A beautiful, draggable floating panel component for React with smart opacity, smooth animations, minimize-to-sidebar mode, and modern design.
 
 [![npm version](https://badge.fury.io/js/%40opengspace%2Freact-hover-panel.svg)](https://www.npmjs.com/package/@opengspace/react-hover-panel)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -18,6 +18,11 @@
 - **🎪 Portal Tooltips** - Tooltips render outside the panel to prevent event interference
 - **🗜️ Minimize to Sidebar** - Shrink the panel to a draggable edge icon with customizable icon and tooltip
 - **⚙️ Highly Customizable** - Extensive props for customization
+
+## 🎮 Try It Live
+
+- **Demo page**: [https://opengspace.github.io/react-hover-panel/](https://opengspace.github.io/react-hover-panel/)
+- **Minimize feature test page**: [https://opengspace.github.io/react-hover-panel/test.html](https://opengspace.github.io/react-hover-panel/test.html) — two panels (standard + `defaultMinimized` with an image icon), a state dashboard, and a manual test checklist. Locally, run `npm run dev` and open `http://localhost:3000/react-hover-panel/test.html`.
 
 ## 📦 Installation
 

@@ -33,8 +33,9 @@ function App() {
       <div className="background-content">
         <h1>Floating Panel Demo</h1>
         <p>
-          This is a demo page showcasing the Floating Panel component.
-          The panel appears as a phone-like floating element that you can drag around.
+          A draggable floating panel with smart opacity, corner icon regions, and a
+          <b> minimize-to-sidebar</b> mode that shrinks the panel to a docked, draggable
+          edge icon instead of closing it.
         </p>
 
         <div className="controls">
@@ -70,6 +71,7 @@ function App() {
             <li>✨ Phone-like appearance with notch and rounded corners</li>
             <li>🎯 Draggable horizontally with boundary constraints</li>
             <li>👁️ Smart opacity: fades when not in use</li>
+            <li>🗜️ Minimize to sidebar: shrink to a draggable docked icon (left panel)</li>
             <li>📱 Responsive design for mobile devices</li>
             <li>🎨 Customizable header, main content, and footer areas</li>
             <li>⚡ Smooth animations and transitions</li>
@@ -373,7 +375,9 @@ function App() {
               border: '1px solid rgba(251, 191, 36, 0.2)'
             }}>
               <p style={{ margin: 0, fontSize: '13px', color: '#92400e', lineHeight: 1.5 }}>
-                <span style={{ fontWeight: 600 }}>💡 Tip:</span> Try dragging the small bar at the top center to move the panel horizontally!
+                <span style={{ fontWeight: 600 }}>💡 Tip:</span> Drag the small bar at the top center to move the
+                panel, or click the <b>—</b> button in the header to minimize it to a docked
+                sidebar icon — click the icon to restore.
               </p>
             </div>
 
