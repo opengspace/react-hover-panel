@@ -45,6 +45,14 @@ const FloatingPanel = React.forwardRef(({
 
   // Event callbacks
   onClose,
+
+  // Minimize-to-sidebar
+  minimizable = false,
+  minimizeIcon,
+  minimizeTooltip = 'Expand panel',
+  defaultMinimized = false,
+  onMinimizeChange,
+
   onDragStart,
   onDragEnd,
   onVisibilityChange,
@@ -110,6 +118,82 @@ const FloatingPanel = React.forwardRef(({
 
   // Tooltip state and handlers
   const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0, position: 'bottom' });
+
+  // ========================================
+  // Minimize-to-sidebar state
+  // ========================================
+  const [minimized, setMinimized] = useState(defaultMinimized);
+
+  // Determine which edge to dock on, based on current panel position
+  const dockSide = useMemo(() => {
+    if (typeof window === 'undefined') return 'right';
+    return position.x < window.innerWidth / 2 ? 'left' : 'right';
+  }, [position.x]);
+
+  const handleMinimize = useCallback(() => {
+    setMinimized(true);
+    onMinimizeChange?.(true);
+  }, [onMinimizeChange]);
+
+  const handleRestore = useCallback(() => {
+    setMinimized(false);
+    onMinimizeChange?.(false);
+  }, [onMinimizeChange]);
+
+  const [dockDragging, setDockDragging] = useState(false);
+  const dockDragStartRef = useRef({ y: 0, startClientY: 0 });
+
+  const handleDockDragStart = useCallback((e) => {
+    if (isMobile) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setDockDragging(true);
+    dockDragStartRef.current = {
+      y: positionRef.current.y,
+      startClientY: e.clientY,
+    };
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!dockDragging) return;
+    const handleMove = (e) => {
+      const dy = e.clientY - dockDragStartRef.current.startClientY;
+      const ny = dockDragStartRef.current.y + dy;
+      const maxY = (typeof window !== 'undefined' ? window.innerHeight : 600) - 56;
+      setPosition((p) => ({ ...p, y: Math.max(8, Math.min(ny, maxY)) }));
+    };
+    const handleUp = () => setDockDragging(false);
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleUp);
+    return () => {
+      document.removeEventListener('mousemove', handleMove);
+      document.removeEventListener('mouseup', handleUp);
+    };
+  }, [dockDragging]);
+
+  const isImageUrl = useCallback((value) => {
+    if (typeof value !== 'string') return false;
+    return /^(https?:)?\/\//i.test(value) ||
+      (/^[./]/.test(value) && /\.(png|jpe?g|gif|webp|svg|ico|bmp)(\?.*)?$/i.test(value));
+  }, []);
+
+  const renderIcon = useCallback((icon, size = 20) => {
+    if (icon == null) return null;
+    if (typeof icon === 'string') {
+      if (isImageUrl(icon)) {
+        return (
+          <img
+            src={icon}
+            alt=""
+            style={{ width: size, height: size, borderRadius: 6, pointerEvents: 'none' }}
+            draggable={false}
+          />
+        );
+      }
+      return <span style={{ fontSize: size }}>{icon}</span>;
+    }
+    return icon;
+  }, [isImageUrl]);
 
   const handleIconMouseEnter = useCallback((e, text) => {
     e.stopPropagation();
@@ -344,14 +428,19 @@ const FloatingPanel = React.forwardRef(({
     top: `${position.y}px`,
     width: typeof width === 'number' ? `${width}px` : width,
     height: `${panelHeight}px`,
-    opacity: currentOpacity,
-    transition: isDragging
-      ? 'opacity 0s, left 0s, top 0s'
-      : `opacity ${opacityTransitionDuration}ms ease-in-out, left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
-    transform: 'translateZ(0)',
+    opacity: minimized ? 0 : currentOpacity,
+    transition: minimized
+      ? `opacity ${opacityTransitionDuration}ms ease-in-out, transform ${opacityTransitionDuration}ms ease-in-out`
+      : isDragging
+        ? 'opacity 0s, left 0s, top 0s'
+        : `opacity ${opacityTransitionDuration}ms ease-in-out, left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
+    transform: minimized
+      ? (dockSide === 'right' ? 'translateX(48px)' : 'translateX(-48px)')
+      : 'translateZ(0)',
     willChange: isDragging ? 'transform, left, top' : 'auto',
     zIndex,
     userSelect: isDragging ? 'none' : 'auto',
+    pointerEvents: minimized ? 'none' : 'auto',
     ...customStyle,
   }), [
     position,
@@ -361,7 +450,9 @@ const FloatingPanel = React.forwardRef(({
     isDragging,
     opacityTransitionDuration,
     zIndex,
-    customStyle
+    customStyle,
+    minimized,
+    dockSide,
   ]);
 
   // ========================================
@@ -409,6 +500,26 @@ const FloatingPanel = React.forwardRef(({
               onMouseLeave={handleIconMouseLeave}
             >
               {typeof topCenter === 'object' ? topCenter.icon : topCenter}
+            </div>
+          )}
+
+          {/* Minimize Button */}
+          {minimizable && (
+            <div
+              className="panel-icon panel-icon-minimize"
+              onMouseEnter={(e) => handleIconMouseEnter(e, minimized ? minimizeTooltip : 'Minimize')}
+              onMouseLeave={handleIconMouseLeave}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (minimized) {
+                  handleRestore();
+                } else {
+                  handleMinimize();
+                }
+              }}
+              style={{ cursor: 'pointer', fontSize: '18px' }}
+            >
+              {renderIcon(minimizeIcon) || '—'}
             </div>
           )}
 
@@ -467,6 +578,31 @@ const FloatingPanel = React.forwardRef(({
           )}
         </div>
       </div>
+
+      {/* Docked sidebar icon (visible when minimized) */}
+      {minimizable && (
+        <div
+          className={`dock-icon dock-icon-${dockSide}${minimized ? ' visible' : ''}`}
+          style={{
+            top: `${position.y}px`,
+            [dockSide]: `${edgeMargin}px`,
+            zIndex,
+          }}
+          onMouseDown={handleDockDragStart}
+          onMouseEnter={(e) => handleIconMouseEnter(e, minimizeTooltip)}
+          onMouseLeave={handleIconMouseLeave}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleRestore();
+          }}
+          role="button"
+          tabIndex={0}
+          title={minimizeTooltip}
+          aria-label={minimizeTooltip}
+        >
+          {renderIcon(minimizeIcon, 24) || '—'}
+        </div>
+      )}
 
       {/* Tooltip rendered outside panel via portal */}
       {tooltip.visible && createPortal(

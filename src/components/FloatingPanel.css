@@ -206,3 +206,47 @@
     cursor: default;
   }
 }
+
+/* Minimize button (header) */
+.panel-icon-minimize {
+  top: 0;
+  right: 36px; /* immediately left of the close / top-right icon slot */
+}
+
+/* Docked sidebar icon */
+.dock-icon {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  color: #444;
+  font-size: 20px;
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1001;
+}
+
+.dock-icon.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.dock-icon.visible:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.dock-icon img {
+  pointer-events: none;
+}
